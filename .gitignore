@@ -10,6 +10,7 @@
 /digit-drupal-site-test-reference/
 
 # Ignore local configuration files.
+/.env
 /behat.yml
 /grumphp.yml
 /runner.yml
