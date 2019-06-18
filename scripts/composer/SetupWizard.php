@@ -62,9 +62,9 @@ class SetupWizard {
 
     self::updateConfig($composer_filename, $params);
     self::updateBehatFiles($params);
+    self::createEnvFile();
     self::updateRunnerFile($params);
     self::cleanFile();
-    self::createEnvFile();
     self::createLibDir();
     self::composerDumpAutoload();
 
