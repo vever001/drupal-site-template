@@ -44,7 +44,13 @@ takes several minutes. At the end you will be asked whether to remove the
 existing version history. It is recommended to confirm this question so that you
 can start your project with a clean slate.
 
-After installing the dependencies, install a clean installation of your site, using the following command:
+After installing the dependencies, create a .env file based on .env.example and configure the variables to match your setup:
+
+```bash
+cp .env.example .env
+```
+
+Next, perform a clean installation of your site by usin the following command:
 
 ```bash
 ./vendor/bin/run toolkit:install-clean
