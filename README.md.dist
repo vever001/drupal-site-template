@@ -28,12 +28,9 @@ these, you can skip directly to step 3.
 If you want to run the website using your locally installed LAMP stack, you
 will want to change the configuration to match your local system.
 
-Customize the default configuration values by copying `runner.yml.dist` to
-`runner.yml`:
-
-```bash
-cp runner.yml.dist runner.yml
-```
+Customize the default configuration values:
+- Edit environment variables in `.env`
+- Copy `runner.yml.dist` to `runner.yml` and update task runner variables
 
 Now edit `runner.yml` with your most beloved text editor. You will want to set
 the database host to `localhost`, and provide the correct database name and
