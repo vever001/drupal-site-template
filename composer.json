@@ -62,6 +62,9 @@
             "web/profiles/contrib/{$name}": ["type:drupal-profile"],
             "web/themes/contrib/{$name}": ["type:drupal-theme"],
             "drush/Commands/{$name}": ["type:drupal-drush"]
+        },
+        "patchLevel": {
+          "drupal/core": "-p2"
         }
     },
     "autoload": {
