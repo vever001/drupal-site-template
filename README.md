@@ -30,7 +30,7 @@ One does not need to be in this repository in order to use the `composer create-
 The project can be created using the following command:
 
 ```bash
-composer create-project openeuropa/drupal-site-template --stability=dev <dg-name>-<project-id>-reference
+composer create-project vever001/drupal-site-template --stability=dev <dg-name>-<project-id>-reference
 ```
 
 For local development, to test the Setup Wizard, run `composer setup` from the root of this project.
