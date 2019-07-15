@@ -114,7 +114,7 @@ class CheckSetupWizard {
     $fs = new Filesystem();
 
     if (!$fs->exists($filename)) {
-      throw new \RuntimeException('The ' . $filename . ' file/folder does not exist.');
+      throw new \RuntimeException(sprintf('The %s file/folder does not exist.', $filename));
     }
   }
 
@@ -128,7 +128,7 @@ class CheckSetupWizard {
     $fs = new Filesystem();
 
     if ($fs->exists($filename)) {
-      throw new \RuntimeException('The ' . $filename . ' file/folder should not exist.');
+      throw new \RuntimeException(sprintf('The %s file/folder should not exist.', $filename));
     }
   }
 
@@ -142,7 +142,7 @@ class CheckSetupWizard {
    */
   private static function assertFileNotContain(string $filename, string $string): void {
     if (strpos(file_get_contents($filename), $string) !== FALSE) {
-      throw new \RuntimeException('The ' . $filename . ' file should not contain $string.');
+      throw new \RuntimeException(sprintf('The %s file should not contain %s.', $filename, $string));
     }
   }
 
