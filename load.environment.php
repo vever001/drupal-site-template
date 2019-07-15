@@ -10,13 +10,13 @@
 use Dotenv\Dotenv;
 use Dotenv\Exception\InvalidPathException;
 
-/**
- * Load any .env file. See /.env.example.
- */
-$dotenv = Dotenv::create(__DIR__);
-
+// Load any .env files.
 try {
-  $dotenv->load();
+  $files = ['.env.project', '.env'];
+  foreach ($files as $file) {
+    $dotenv = Dotenv::create(__DIR__, $file);
+    $dotenv->overload();
+  }
 }
 catch (InvalidPathException $e) {
   // Do nothing. Production environments rarely use .env files.

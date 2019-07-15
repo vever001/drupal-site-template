@@ -162,7 +162,7 @@ class SetupWizard {
   private static function updateRunnerFile(array $params): void {
     $filenames = [
       'runner.yml.dist',
-      '.env',
+      '.env.project',
     ];
 
     foreach ($filenames as $filename) {
@@ -206,7 +206,7 @@ class SetupWizard {
    */
   private static function createEnvFile(): void {
     $fs = new Filesystem();
-    $fs->copy('.env.example', '.env');
+    $fs->copy('.env.project', '.env');
   }
 
   /**
