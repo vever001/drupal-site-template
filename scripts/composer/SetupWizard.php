@@ -62,7 +62,6 @@ class SetupWizard {
 
     self::updateConfig($composer_filename, $params);
     self::updateBehatFiles($params);
-    self::createEnvFile();
     self::updateRunnerFile($params);
     self::cleanFile();
     self::createLibDir();
@@ -199,14 +198,6 @@ class SetupWizard {
     // Remove github files.
     unlink('.github/pull_request_template.md');
     rmdir('.github');
-  }
-
-  /**
-   * Create the .env file.
-   */
-  private static function createEnvFile(): void {
-    $fs = new Filesystem();
-    $fs->copy('.env.project', '.env');
   }
 
   /**
