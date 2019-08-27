@@ -163,7 +163,7 @@ class SetupWizard {
   private static function updateRunnerFile(array $params): void {
     $filenames = [
       'runner.yml.dist',
-      '.env.project',
+      '.env',
     ];
 
     foreach ($filenames as $filename) {
