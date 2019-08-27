@@ -12,10 +12,12 @@ use Dotenv\Exception\InvalidPathException;
 
 // Load any .env files.
 try {
-  $files = ['.env.project', '.env'];
+  $files = ['.env', '.env.local'];
   foreach ($files as $file) {
-    $dotenv = Dotenv::create(__DIR__, $file);
-    $dotenv->overload();
+    if (file_exists(__DIR__ . '/' . $file)) {
+      $dotenv = Dotenv::create(__DIR__, $file);
+      $dotenv->overload();
+    }
   }
 }
 catch (InvalidPathException $e) {
