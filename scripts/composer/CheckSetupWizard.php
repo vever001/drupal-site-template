@@ -74,7 +74,7 @@ class CheckSetupWizard {
     ];
     $assert_filenames = [
       'runner.yml.dist',
-      '.env.project',
+      '.env',
     ];
     foreach ($strings as $string) {
       foreach ($assert_filenames as $assert_filename) {
