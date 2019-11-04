@@ -56,7 +56,6 @@ class CheckSetupWizard {
     $filenames = [
       'README.md.dist',
       '.gitignore.dist',
-      '.git',
       'CHANGELOG.md',
       '.drone.yml',
       'packages.json',
