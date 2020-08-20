@@ -198,6 +198,7 @@ class SetupWizard {
 
     // Remove github files.
     unlink('.github/workflows/ci.yml');
+    rmdir('.github/workflows');
     rmdir('.github');
   }
 

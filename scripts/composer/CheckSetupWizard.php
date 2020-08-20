@@ -58,8 +58,8 @@ class CheckSetupWizard {
       '.gitignore.dist',
       'CHANGELOG.md',
       'packages.json',
-      '.github',
       '.github/workflows/ci.yml',
+      '.github',
     ];
     foreach ($filenames as $filename) {
       self::assertNotExistFile($filename);
