@@ -15,30 +15,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create project command
-        run: composer create-project --repository-url=packages.json --ansi --no-progress --no-interaction vever001/drupal-site-template digit-drupal-site-test-reference
-
-      - name: Initialize git
+      - name: Create a project
         run: |
+          composer create-project --repository-url=packages.json --ansi --no-progress --no-interaction vever001/drupal-site-template digit-drupal-site-test-reference
           cd digit-drupal-site-test-reference
           git init
 
-      - name: Install the drupal site
+      - name: Install site and run tests
         run: |
           cd digit-drupal-site-test-reference
-          ./vendor/bin/run toolkit:install-clean
-
-      - name: Export the Drupal configuration
-        run: |
-          cd digit-drupal-site-test-reference
-          ./vendor/bin/drush cex -y
-
-      - name: Run grumphp tests
-        run: |
-          cd digit-drupal-site-test-reference
-          ./vendor/bin/grumphp run
-
-      - name: Run behat tests
-        run: |
-          cd digit-drupal-site-test-reference
-          ./vendor/bin/behat --strict
+          docker-compose up -d
+          docker-compose exec web ./vendor/bin/run toolkit:install-clean
+          docker-compose exec web ./vendor/bin/drush cex -y
+          docker-compose exec web ./vendor/bin/grumphp run
+          docker-compose exec web ./vendor/bin/behat --strict
