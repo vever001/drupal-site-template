@@ -43,30 +43,33 @@ Feature: User authentication
       | node/add         |
       | user/1           |
 
-  @api
-  Scenario Outline: Authenticated user can access pages they are authorized to
-    Given I am logged in as a user with the "authenticated" role
-    Then I visit "<path>"
-
-    Examples:
-      | path |
-      | user |
-
-  @api
-  Scenario Outline: Authenticated user cannot access site administration
-    Given I am logged in as a user with the "authenticated" role
-    When I go to "<path>"
-    Then I should get an access denied error
-
-    Examples:
-      | path             |
-      | admin            |
-      | admin/appearance |
-      | admin/config     |
-      | admin/content    |
-      | admin/people     |
-      | admin/structure  |
-      # To do: the 'node/' path should be disabled on most Drupal sites.
-      # | node            |
-      | node/add         |
-      | user/1           |
+# Uncomment this after switching theme. The Stark theme (from minimal profile) doesn't provide any way
+# (e.g: class on the body) to detect if we are logged in or not.
+# See \Drupal\Tests\project\Behat\DrupalContext::loggedIn
+#  @api
+#  Scenario Outline: Authenticated user can access pages they are authorized to
+#    Given I am logged in as a user with the "authenticated" role
+#    Then I visit "<path>"
+#
+#    Examples:
+#      | path |
+#      | user |
+#
+#  @api
+#  Scenario Outline: Authenticated user cannot access site administration
+#    Given I am logged in as a user with the "authenticated" role
+#    When I go to "<path>"
+#    Then I should get an access denied error
+#
+#    Examples:
+#      | path             |
+#      | admin            |
+#      | admin/appearance |
+#      | admin/config     |
+#      | admin/content    |
+#      | admin/people     |
+#      | admin/structure  |
+#      # To do: the 'node/' path should be disabled on most Drupal sites.
+#      # | node            |
+#      | node/add         |
+#      | user/1           |
