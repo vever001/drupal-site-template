@@ -31,8 +31,8 @@ class CheckSetupWizard {
     $composer_json = new JsonFile($composer_filename);
     $config = $composer_json->read();
 
-    self::assertConfigChange($config['name'], 'openeuropa/drupal-site-template');
-    self::assertConfigChange($config['description'], 'A template for setting up an OpenEuropa Drupal site.');
+    self::assertConfigChange($config['name'], 'vever001/drupal-site-template');
+    self::assertConfigChange($config['description'], '"A template for setting up an EC Europa agency site.');
 
     // Check the file structure.
     $filenames = [
@@ -54,7 +54,6 @@ class CheckSetupWizard {
     }
 
     $filenames = [
-      'README.md.dist',
       '.gitignore.dist',
       'CHANGELOG.md',
       'packages.json',
@@ -67,8 +66,8 @@ class CheckSetupWizard {
 
     // Check runner.yml.dist.
     $strings = [
-      'My OpenEuropa site',
-      'openeuropa_site',
+      'Project name',
+      'project_name',
     ];
     $assert_filenames = [
       'runner.yml.dist',

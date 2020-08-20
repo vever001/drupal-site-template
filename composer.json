@@ -1,29 +1,27 @@
 {
     "name": "vever001/drupal-site-template",
-    "description": "A template for setting up an OpenEuropa Drupal site.",
+    "description": "A template for setting up an EC Europa agency site.",
     "type": "project",
     "license": "EUPL-1.2",
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": ">=7.2",
-        "composer/installers": "^1.5",
-        "cweagans/composer-patches": "^1.0",
-        "drupal-composer/drupal-scaffold": "^2.5",
-        "drupal/core": "^8.7",
-        "drush/drush": "^9.0",
-        "openeuropa/composer-artifacts": "~0.1",
-        "openeuropa/oe_profile": "^0.4",
-        "openeuropa/oe_theme": "^2.0",
+        "php": "^7.2",
+        "composer/installers": "^1.2",
+        "cweagans/composer-patches": "^1.6.5",
+        "drupal/core": "^8.9.0",
+        "drupal/core-composer-scaffold": "^8.9.0",
+        "drush/drush": "^9.7.1 | ^10.0.0",
         "webflo/drupal-finder": "^1.0",
         "webmozart/path-util": "^2.3",
         "zaporylie/composer-drupal-optimizations": "^1.0"
     },
     "require-dev": {
-        "drupal/drupal-extension": "~4.0",
-        "ec-europa/toolkit": "~4.0.0-beta7",
-        "drupal/core-dev": "^8.7",
-        "vlucas/phpdotenv": "^3.4"
+        "drupal/console": "^1.0.2",
+        "drupal/core-dev": "^8.9.0",
+        "drupal/drupal-extension": "~4.0.1",
+        "ec-europa/toolkit": "^4.1.0",
+        "vlucas/phpdotenv": "^4.0"
     },
     "scripts": {
         "post-root-package-install": [
@@ -45,38 +43,54 @@
         }
     },
     "extra": {
-        "artifacts": {
-            "openeuropa/oe_theme": {
-                "dist": {
-                    "url": "https://github.com/{name}/releases/download/{pretty-version}/{project-name}-{pretty-version}.tar.gz",
-                    "type": "tar"
-                }
-            }
-        },
         "composer-exit-on-patch-failure": true,
-        "enable-patching": true,
-        "installer-paths": {
-            "web/core": ["type:drupal-core"],
-            "web/libraries/{$name}": ["type:drupal-library"],
-            "web/modules/contrib/{$name}": ["type:drupal-module"],
-            "web/profiles/contrib/{$name}": ["type:drupal-profile"],
-            "web/themes/contrib/{$name}": ["type:drupal-theme"],
-            "drush/Commands/{$name}": ["type:drupal-drush"]
-        },
         "patchLevel": {
             "drupal/core": "-p2"
+        },
+        "drupal-scaffold": {
+            "locations": {
+                "web-root": "web/"
+            },
+            "file-mapping": {
+                "[web-root]/.user.ini": "resources/drupal-scaffold/.user.ini"
+            }
+        },
+        "installer-paths": {
+            "web/core": [
+                "type:drupal-core"
+            ],
+            "web/libraries/{$name}": [
+                "type:drupal-library"
+            ],
+            "web/modules/contrib/{$name}": [
+                "type:drupal-module"
+            ],
+            "web/profiles/contrib/{$name}": [
+                "type:drupal-profile"
+            ],
+            "web/themes/contrib/{$name}": [
+                "type:drupal-theme"
+            ],
+            "drush/Commands/contrib/{$name}": [
+                "type:drupal-drush"
+            ]
         }
     },
     "autoload": {
         "classmap": [
             "scripts/composer/SetupWizard.php",
             "scripts/composer/CheckSetupWizard.php"
-        ]
+        ],
+        "psr-4": {
+            "Drupal\\project\\": "./src/"
+        }
     },
     "autoload-dev": {
-        "files": ["load.environment.php"],
+        "files": [
+            "load.environment.php"
+        ],
         "psr-4": {
-            "OpenEuropa\\Site\\Tests\\": "./tests/"
+            "Drupal\\Tests\\project\\": "./tests/"
         }
     },
     "conflict": {

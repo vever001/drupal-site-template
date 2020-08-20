@@ -2,13 +2,13 @@ default:
   suites:
     default:
       paths:
-        - %paths.base%/tests/features
+        - "%paths.base%/tests/features"
       contexts:
         - Drupal\DrupalExtension\Context\MarkupContext
         - Drupal\DrupalExtension\Context\MessageContext
         - Drupal\DrupalExtension\Context\MinkContext
-        - OpenEuropa\Site\Tests\Behat\DrupalContext
-        - OpenEuropa\Site\Tests\Behat\FeatureContext
+        - Drupal\Tests\project\Behat\DrupalContext
+        - Drupal\Tests\project\Behat\FeatureContext
       filters:
         tags: "${behat.tags}"
   extensions:
@@ -19,28 +19,31 @@ default:
       javascript_session: 'selenium2'
       selenium2:
         wd_host: '${selenium.host}:${selenium.port}/wd/hub'
-        capabilities: { "browser": '${selenium.browser}', "version": "*" }
-      base_url: "${drupal.base_url}"
+        capabilities:
+          browser: '${selenium.browser}'
+          version: '*'
+          chrome:
+            switches:
+              - '--headless'
+              - '--disable-gpu'
+              - '--start-maximized'
+      base_url: '${drupal.base_url}'
+      files_path: '%paths.base%/tests/fixtures/files'
     Drupal\DrupalExtension:
-      api_driver: "drupal"
+      api_driver: 'drupal'
       drupal:
-        drupal_root: "${drupal.root}"
+        drupal_root: '${drupal.root}'
       region_map:
-        page: "body"
-        header: ".ecl-site-header"
-        page header: ".ecl-page-header__body"
-        navigation: ".ecl-navigation-menu"
-        custom footer: ".ecl-footer__custom"
-        corporate top footer: ".ecl-footer__corporate-top"
-        corporate bottom footer: ".ecl-footer__corporate-bottom"
+        content: '#content'
+        footer: '#footer'
+        navigation: '#nav-header'
+        left header: '#header-left'
+        right header: '#header-right'
+        right sidebar: '#aside-region'
       selectors:
-        message_selector: '.ecl-message,.messages'
-        error_message_selector: '.ecl-message--error,.messages--error'
-        success_message_selector: '.ecl-message--success,.messages--status'
-        warning_message_selector: '.ecl-message--warning,.messages--warning'
-        login_form_selector: '#user-login-form'
-      text:
-        log_in: 'Log in'
-        log_out: 'Log out'
+        message_selector: '.messages, .alert'
+        error_message_selector: '.messages.messages-error, .alert.alert-danger'
+        success_message_selector: '.messages.messages-status, .alert.alert-success'
+        warning_message_selector: '.messages.messages-warning, .alert.alert-warning'
   formatters:
     progress: ~

@@ -1,0 +1,6 @@
+command:
+  project:
+    build-settings-overrides:
+      options:
+        root: ${drupal.root}
+        sites-subdir: ${drupal.site.sites_subdir}

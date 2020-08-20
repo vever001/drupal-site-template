@@ -1,52 +1,127 @@
-version: '2'
+version: "3"
+
 services:
   web:
-    image: fpfis/httpd-php-dev:7.3
+    build:
+      context: ./resources/docker/images/web
+      #### Override fpfis user and group id set in Dockerfile (for Mac users).
+      # args:
+        # FPFIS_USER_ID: 500
+        # FPFIS_GROUP_ID: 21
+    container_name: "${DOCKER_PROJECT_NAME}_web"
     working_dir: /var/www/html
-    ports:
-      - 8080:8080
     volumes:
       - .:/var/www/html # Non Mac users.
+      - xhgui:/usr/local/src/xhgui
       # - nfsmount:/var/www/html # Mac Users with the nfsmount volume.
     environment:
-      # ASDA CREDENTIALS
-      # By leaving these variables empty Docker Compose will set them to their host values.
-      ASDA_USER:
-      ASDA_PASSWORD:
-      # XDEBUG CONFIGURATION
-      XDEBUG_CONFIG: "remote_enable=1 remote_host=10.254.254.254 remote_port=9000 idekey=PHPSTORM remote_autostart=1"
+      # PHP/apache config.
+      DOCUMENT_ROOT: /var/www/html/web
+      HTTP_PORT: 80
+      DAEMON_USER: fpfis
+      DAEMON_GROUP: fpfis
+      # Set COMPOSER_CACHE_DIR to defaults (for fpfis user).
+      COMPOSER_CACHE_DIR:
+      # XDEBUG config.
+      # For Xdebug setup in PhpStorm:
+      # - Go to Settings > Languages & Frameworks > PHP > Servers
+      # - Add a server named "Docker"
+      # - Enable path mapping and for the project root path set "Absolute path on the server" to "/var/www/html".
       PHP_IDE_CONFIG: "serverName=Docker"
-      # For Xdebug setup, run this command in the terminal:
-      # For Mac users: sudo ifconfig en0 alias 10.254.254.254 255.255.255.0
-      # For Linux users: sudo ip addr add 10.254.254.254/32 dev lo label lo:1
+      ### MAC users add remote host 'host.docker.internal', uncomment below:
+      # XDEBUG_CONFIG: "remote_host=host.docker.internal"
+
+      # Mailhog config.
+      SMTP_SERVER: mailhog
+      SMTP_PORT: 1025
+      # XHGui config.
+      XHGUI_MONGO_HOST: "mongodb://xhgui"
+      # ASDA CREDENTIALS (inherit values from host).
+      ASDA_USER: ${ASDA_USER}
+      ASDA_PASSWORD: ${ASDA_PASSWORD}
     env_file:
       - .env
+    labels:
+      - "traefik.http.services.${DOCKER_PROJECT_NAME}_web.loadbalancer.server.port=80"
+      - "traefik.http.routers.${DOCKER_PROJECT_NAME}_web.rule=Host(`web.${DOCKER_PROJECT_BASE_URL}`)"
+
   mysql:
-    image: percona/percona-server:5.6
+    # We use wodby/mariadb instead of percona/percona-server because it contains an optimized my.cnf version.
+    image: wodby/mariadb:$DOCKER_MARIADB_TAG
+    container_name: "${DOCKER_PROJECT_NAME}_mysql"
+    stop_grace_period: 30s
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-#    ports:
-#      - 3306:3306
+  #      volumes:
+  #        - ./mariadb-init:/docker-entrypoint-initdb.d # Place init .sql file(s) here.
+  #        - /path/to/mariadb/data/on/host:/var/lib/mysql # Use bind mount
 
-  # Spawn a Selenium server which also includes a VNC server on localhost:5900 (the password is "secret")
-  selenium:
-    image: selenium/standalone-chrome-debug:3.11
+  pma:
+    image: phpmyadmin/phpmyadmin
+    container_name: "${DOCKER_PROJECT_NAME}_pma"
     environment:
-      - DISPLAY=:99
-      - SE_OPTS=-debug
+      PMA_HOST: $DRUPAL_DATABASE_HOST
+      PMA_USER: $DRUPAL_DATABASE_USERNAME
+      PMA_PASSWORD: ''
+      PHP_UPLOAD_MAX_FILESIZE: 1G
+      PHP_MAX_INPUT_VARS: 1G
+    labels:
+      - "traefik.http.routers.${DOCKER_PROJECT_NAME}_pma.rule=Host(`pma.${DOCKER_PROJECT_BASE_URL}`)"
+
+  # You can view the browser using a VNC client by connecting to localhost:5900 (username empty, password is "secret").
+  # You also need to remove the "--headless" and "--disable-gpu" in your behat.yml.
+  selenium:
+    image: selenium/standalone-chrome-debug:$DOCKER_SELENIUM_CHROME_TAG
+    container_name: "${DOCKER_PROJECT_NAME}_selenium"
     ports:
-      - 5900:5900
+      - '5900:5900'
     expose:
       - 4444
+    volumes:
+      - /dev/shm:/dev/shm
+    labels:
+      - "traefik.tcp.services.mytcpservice.loadbalancer.server.port=5900"
 
-#### Mac users: uncomment the "volumes" key to enable the NFS file sharing. You can find more information about Docker for Mac here: https://github.com/openeuropa/openeuropa/blob/master/docs/starting/tooling.md#using-docker-on-macos
+  mailhog:
+    image: mailhog/mailhog
+    container_name: "${DOCKER_PROJECT_NAME}_mailhog"
+    labels:
+      - "traefik.http.services.${DOCKER_PROJECT_NAME}_mailhog.loadbalancer.server.port=8025"
+      - "traefik.http.routers.${DOCKER_PROJECT_NAME}_mailhog.rule=Host(`mailhog.${DOCKER_PROJECT_BASE_URL}`)"
 
-#volumes:
-#  nfsmount:
-#    driver: local
-#    driver_opts:
-#      type: nfs
-#      o: addr=host.docker.internal,rw,nolock,hard,nointr,nfsvers=3
-#      device: ":${PWD}/"
+  xhgui:
+    image: edyan/xhgui:php7.2
+    container_name: "${DOCKER_PROJECT_NAME}_xhgui"
+    volumes:
+      - xhgui:/usr/local/src/xhgui
+    labels:
+      - "traefik.http.routers.${DOCKER_PROJECT_NAME}_xhgui.rule=Host(`xhgui.${DOCKER_PROJECT_BASE_URL}`)"
 
-#### End Mac users.
+  portainer:
+    image: portainer/portainer
+    container_name: "${DOCKER_PROJECT_NAME}_portainer"
+    command: --no-auth -H unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - "traefik.http.routers.${DOCKER_PROJECT_NAME}_portainer.rule=Host(`portainer.${DOCKER_PROJECT_BASE_URL}`)"
+
+  traefik:
+    image: traefik:v2.0
+    container_name: "${DOCKER_PROJECT_NAME}_traefik"
+    command: --api.insecure=true --providers.docker
+    ports:
+      - '8080:80'
+      - '8088:8080' # Traefik dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  xhgui:
+  #### Mac users: uncomment to enable the NFS file sharing.
+  # nfsmount:
+  #   driver: local
+  #   driver_opts:
+  #     type: nfs
+  #     o: addr=host.docker.internal,rw,nolock,hard,nointr,nfsvers=3
+  #     device: ":${PWD}/"

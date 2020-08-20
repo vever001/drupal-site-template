@@ -1,59 +1,110 @@
-# OpenEuropa template for Drupal 8 projects
+# Drupal project.
 
-[![Build Status](https://drone.fpfis.eu/api/badges/openeuropa/drupal-site-template/status.svg?branch=master)](https://drone.fpfis.eu/openeuropa/drupal-site-template)
+## Prerequisites
 
-**Please note: this repository contains code that is necessary to generate
-a new Drupal 8 project, please read carefully this README.md. Do not clone this repository.**
+If using Docker (recommended):
+ - [Docker Compose](https://docs.docker.com/compose/install/)
+ - PHP 7.1 or greater (needed to run [GrumPHP](https://github.com/phpro/grumphp) Git hooks)
 
-You need to have the following software installed on your local development environment:
+If using a local LAMP stack:
+ - A local LAMP stack with PHP 7.1 or greater
+ - [Composer](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx).
 
-* [Git](https://git-scm.com/)
-* [Docker](https://docker.com/)
-* [Docker Compose](https://docs.docker.com/compose/install/)
+## Building your local
 
-## How do I get my new OpenEuropa project codebase?
+##### Using Docker
 
-First of all choose carefully the name of your new project, it should respect the
-following convention:
+- Run: `composer install`
+- Start the containers: `docker-compose up -d`
+- Get a shell: `docker-compose exec --user fpfis web bash`
+- Build the site: `./vendor/bin/run toolkit:build-dev`
 
+| Service    | Url                                        |
+| ---------- | ------------------------------------------ |
+| WEB        | http://web.docker.localhost:8080/          |
+| -
+| phpMyAdmin | http://pma.docker.localhost:8080/          |
+| Mailhog    | http://mailhog.docker.localhost:8080/      |
+| XHGui      | http://xhgui.docker.localhost:8080/        |
+| Portainer  | http://portainer.docker.localhost:8080/    |
+
+- To profile requests using XHGui, uncomment the line in `web/.user.ini`.
+
+##### Using local LAMP stack
+
+- Run: `composer install`
+- Build the site: `./vendor/bin/run toolkit:build-dev`
+- Create a `.env.local` file with your db credentials and other overrides of `.env` if needed:
+    ```
+    DRUPAL_DATABASE_USERNAME=root
+    DRUPAL_DATABASE_PASSWORD=password
+    DRUPAL_DATABASE_PREFIX=
+    DRUPAL_DATABASE_HOST=localhost
+    DRUPAL_DATABASE_PORT=3306
+    ```
+- Create a vhost in apache/nginx pointing to the `web` folder
+
+## Installation
+##### Clone installation
+
+Set ASDA credentials (provided by fellow colleagues or devops) in `.env.local`:
 ```
-<dg-name>-<project-id>-reference
+ASDA_USER=...
+ASDA_PASSWORD=...
 ```
 
-After that contact the QA team, they will create for you a new repository at:
-
+Download and install the dump:
 ```
-https://github.com/ec-europa/<dg-name>-<project-id>-reference
+./vendor/bin/run toolkit:download-dump
+./vendor/bin/run install-clone
 ```
 
-Then generate your new Drupal 8 project codebase by running the following command:
+##### Clean installation
+
+You can install the sites from the existing config, but you won't get the content.
+```
+./vendor/bin/drush toolkit:install-clean
+```
+
+## Running the tests
+
+To run the coding standards and other static checks:
 
 ```bash
-docker run --rm -ti -v $PWD:/var/www/html -w /var/www/html fpfis/httpd-php-dev:7.3 composer create-project vever001/drupal-site-template --stability=dev --remove-vcs <dg-name>-<project-id>-reference
+./vendor/bin/grumphp run
 ```
 
-This will download this starterkit into the `<dg-name>-<project-id>-reference` folder and a
-wizard will ask you for the project name and your organisation. It will use this
-information to personalize your project's configuration files.
+To run Behat tests:
 
-The installer will then download all dependencies for the project. This process
-takes several minutes. At the end you will be asked whether to remove the
-existing version history. It is recommended to confirm this question so that you
-can start your project with a clean slate.
+```bash
+./vendor/bin/behat
+```
 
-After completing the command above you can push the content of `<dg-name>-<project-id>-reference`
-to the GitHub repository created for you by the QA team.
+## Continuous integration and deployment
 
-## Ok, I've got my codebase, what should I do now?
+To check the status of the continuous integration of your project, go to [Drone](https://drone.fpfis.eu/).
 
-1. The steps to get your new site up and running can be found in
-`<dg-name>-<project-id>-reference/README.md`.
-2. Check the [OpenEuropa Documentation](https://github.com/openeuropa/documentation)
-for a list of available components, best practices, etc.
-3. Make sure you master the concepts of [Configuration Management](https://www.drupal.org/docs/8/configuration-management)
-and the related development workflow in Drupal 8.
+A pipeline - created and maintained by DevOps - is applied by default.
+It manages the code review of the code, it runs all tests on the repository and
+builds the site artifact for the deployment.
 
-## Should I clone this GitHub project?
+You can control which commands will be ran during deployment by creating
+and pushing a `.opts.yml` file.
 
-No, this repository will only generate your new project's codebase, you then need
-to push the generated codebase to a dedicated repository, as explained above.
+If none is found the following one will be ran:
+
+```yml
+upgrade_commands:
+  - './vendor/bin/drush state:set system.maintenance_mode 1 --input-format=integer -y'
+  - './vendor/bin/drush updatedb -y'
+  - './vendor/bin/drush cache:rebuild'
+  - './vendor/bin/drush state:set system.maintenance_mode 0 --input-format=integer -y'
+  - './vendor/bin/drush cache:rebuild'
+```
+
+The following conventions apply:
+
+- Every push on the site's deployment branch (usually `master`) will trigger
+  a deployment on the acceptance environment
+- Every new tag on the site's deployment branch (usually `master`) will
+  trigger a deployment on production

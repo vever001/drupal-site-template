@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace OpenEuropa\Site\Tests\Behat;
+namespace Drupal\Tests\project\Behat;
 
 use Drupal\DrupalExtension\Context\DrupalContext as DrupalExtensionDrupalContext;
 
