@@ -13,10 +13,30 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: Create project command
+        run: composer create-project --repository-url=packages.json --ansi --no-progress --no-interaction vever001/drupal-site-template:agencies digit-drupal-site-test-reference
 
-      - name: Run a multi-line script
+      - name: Initialize git
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          cd digit-drupal-site-test-reference
+          git init
+
+      - name: Install the drupal site
+        run: |
+          cd digit-drupal-site-test-reference
+          ./vendor/bin/run toolkit:install-clean
+
+      - name: Export the Drupal configuration
+        run: |
+          cd digit-drupal-site-test-reference
+          ./vendor/bin/drush cex -y
+
+      - name: Run grumphp tests
+        run: |
+          cd digit-drupal-site-test-reference
+          ./vendor/bin/grumphp run
+
+      - name: Run behat tests
+        run: |
+          cd digit-drupal-site-test-reference
+          ./vendor/bin/behat --strict
