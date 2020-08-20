@@ -198,7 +198,6 @@ class SetupWizard {
     unlink('packages.json');
 
     // Remove github files.
-    unlink('.github/pull_request_template.md');
     rmdir('.github');
   }
 

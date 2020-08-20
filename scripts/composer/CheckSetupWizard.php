@@ -59,7 +59,6 @@ class CheckSetupWizard {
       'CHANGELOG.md',
       '.drone.yml',
       'packages.json',
-      '.github/pull_request_template.md',
       '.github',
     ];
     foreach ($filenames as $filename) {
