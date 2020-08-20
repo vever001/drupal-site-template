@@ -143,6 +143,7 @@ class SetupWizard {
 
     // Remove github files.
     unlink('.github/workflows/ci.yml');
+    unlink('.github/workflows/docker-compose.override.yml');
     rmdir('.github/workflows');
     rmdir('.github');
   }

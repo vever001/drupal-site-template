@@ -24,6 +24,8 @@ jobs:
       - name: Start Docker compose
         run: |
           cd digit-drupal-site-test-reference
+          id
+          cp ../.github/workflows/docker-compose.override.yml ./
           docker-compose up -d
           sleep 10
 

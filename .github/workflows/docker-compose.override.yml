@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  web:
+    build:
+      #### Override fpfis UID and GID for github actions.
+      args:
+        FPFIS_USER_ID: 1001
+        FPFIS_GROUP_ID: 115
