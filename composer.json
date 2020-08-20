@@ -30,6 +30,7 @@
             "DrupalSiteTemplate\\composer\\SetupWizard::setup"
         ],
         "post-create-project-cmd": [
+            "@composer dump-autoload",
             "DrupalSiteTemplate\\composer\\CheckSetupWizard::check",
             "DrupalSiteTemplate\\composer\\SetupWizard::cleanup"
         ],
