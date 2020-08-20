@@ -194,7 +194,6 @@ class SetupWizard {
     }
 
     // Remove the CI files.
-    unlink('.drone.yml');
     unlink('packages.json');
 
     // Remove github files.

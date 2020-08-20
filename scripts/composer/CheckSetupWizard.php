@@ -57,7 +57,6 @@ class CheckSetupWizard {
       'README.md.dist',
       '.gitignore.dist',
       'CHANGELOG.md',
-      '.drone.yml',
       'packages.json',
       '.github',
     ];
