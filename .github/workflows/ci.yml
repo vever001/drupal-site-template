@@ -25,6 +25,7 @@ jobs:
         run: |
           cd digit-drupal-site-test-reference
           docker-compose up -d
+          sleep 10
 
       - name: Install site and run tests
         run: |
