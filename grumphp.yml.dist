@@ -10,7 +10,6 @@ parameters:
     - inc
     - theme
     - install
-    - yml
   tasks.git_commit_message.matchers: []
 
   extensions:
