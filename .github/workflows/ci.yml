@@ -21,10 +21,14 @@ jobs:
           cd digit-drupal-site-test-reference
           git init
 
-      - name: Install site and run tests
+      - name: Start Docker compose
         run: |
           cd digit-drupal-site-test-reference
           docker-compose up -d
+
+      - name: Install site and run tests
+        run: |
+          cd digit-drupal-site-test-reference
           docker-compose exec web ./vendor/bin/run toolkit:install-clean
           docker-compose exec web ./vendor/bin/drush cex -y
           docker-compose exec web ./vendor/bin/grumphp run
