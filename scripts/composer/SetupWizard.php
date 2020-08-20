@@ -197,6 +197,7 @@ class SetupWizard {
     unlink('packages.json');
 
     // Remove github files.
+    unlink('.github/workflows/ci.yml');
     rmdir('.github');
   }
 
