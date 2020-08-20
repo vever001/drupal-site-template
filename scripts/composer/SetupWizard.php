@@ -157,7 +157,6 @@ class SetupWizard {
 
     $dirs = [
       'modules',
-      'profiles',
       'themes',
     ];
     foreach ($dirs as $dir) {

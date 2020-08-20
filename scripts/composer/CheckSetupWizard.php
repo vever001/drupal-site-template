@@ -39,8 +39,6 @@ class CheckSetupWizard {
       'lib',
       'lib/modules',
       'lib/modules/.gitkeep',
-      'lib/profiles',
-      'lib/profiles/.gitkeep',
       'lib/themes',
       'lib/themes/.gitkeep',
       'config',
