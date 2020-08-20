@@ -26,7 +26,7 @@ class ToolkitOverrideInstallCommands extends ToolkitInstallCommands {
       // Check any config override/artifact & security updates.
       return $this->taskProjectDrush()
         ->drush('pm:security')
-        ->drush('project:test-config-status')
+        ->drush('project:config-status')
         ->verbose(TRUE)
         ->printOutput(TRUE)
         ->stopOnFail(TRUE)
