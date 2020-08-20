@@ -12,6 +12,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - with:
+          fetch-depth: 0
 
       - name: Create project command
         run: composer create-project --repository-url=packages.json --ansi --no-progress --no-interaction vever001/drupal-site-template digit-drupal-site-test-reference
