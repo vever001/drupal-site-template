@@ -23,14 +23,19 @@ class ToolkitOverrideInstallCommands extends ToolkitInstallCommands {
    */
   public function postInstallClean(Result $result, CommandData $commandData) {
     if ($result->wasSuccessful()) {
-      // Check any config override/artifact & security updates.
-      return $this->taskProjectDrush()
-        ->drush('pm:security')
-        ->drush('project:config-status')
-        ->verbose(TRUE)
-        ->printOutput(TRUE)
-        ->stopOnFail(TRUE)
-        ->run();
+      $config_file = $this->getConfig()->get('toolkit.clean.config_file');
+      $has_config = file_exists($config_file);
+
+      if ($has_config) {
+        // Check any config override/artifact & security updates.
+        return $this->taskProjectDrush()
+          ->drush('pm:security')
+          ->drush('project:config-status')
+          ->verbose(TRUE)
+          ->printOutput(TRUE)
+          ->stopOnFail(TRUE)
+          ->run();
+      }
     }
   }
 

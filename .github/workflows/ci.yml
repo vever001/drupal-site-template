@@ -27,10 +27,20 @@ jobs:
           docker-compose up -d
           sleep 10
 
-      - name: Install site and run tests
+      - name: Install site
         run: |
           cd digit-drupal-site-test-reference
-          docker-compose exec -T web ./vendor/bin/run toolkit:install-clean
-          docker-compose exec -T web ./vendor/bin/drush cex -y
-          docker-compose exec -T web ./vendor/bin/grumphp run
-          docker-compose exec -T web ./vendor/bin/behat --strict
+          docker-compose exec -T --user fpfis web ./vendor/bin/run toolkit:install-clean
+
+      - name: Test project:config-status command
+        run: |
+          cd digit-drupal-site-test-reference
+          docker-compose exec -T --user fpfis web ./vendor/bin/drush cex -y
+          docker-compose exec -T --user fpfis web ./vendor/bin/drush project:config-status
+
+      - name: Test PHPCS, Behat and PHPUnit
+        run: |
+          cd digit-drupal-site-test-reference
+          docker-compose exec -T --user fpfis web ./vendor/bin/run toolkit:test-phpcs
+          docker-compose exec -T --user fpfis web ./vendor/bin/run toolkit:test-behat
+          docker-compose exec -T --user fpfis web ./vendor/bin/phpunit

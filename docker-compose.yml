@@ -51,7 +51,7 @@ services:
     container_name: "${DOCKER_PROJECT_NAME}_mysql"
     stop_grace_period: 30s
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ROOT_PASSWORD: $DRUPAL_DATABASE_PASSWORD
   #      volumes:
   #        - ./mariadb-init:/docker-entrypoint-initdb.d # Place init .sql file(s) here.
   #        - /path/to/mariadb/data/on/host:/var/lib/mysql # Use bind mount
@@ -62,7 +62,7 @@ services:
     environment:
       PMA_HOST: $DRUPAL_DATABASE_HOST
       PMA_USER: $DRUPAL_DATABASE_USERNAME
-      PMA_PASSWORD: ''
+      PMA_PASSWORD: $DRUPAL_DATABASE_PASSWORD
       PHP_UPLOAD_MAX_FILESIZE: 1G
       PHP_MAX_INPUT_VARS: 1G
     labels:

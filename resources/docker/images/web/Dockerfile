@@ -1,4 +1,4 @@
-FROM  fpfis/httpd-php-oci-dev:7.3
+FROM  fpfis/httpd-php-dev:7.3
 
 # Install extra packages.
 RUN apt-get update \
