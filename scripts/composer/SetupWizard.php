@@ -67,7 +67,6 @@ class SetupWizard {
     self::updateRunnerFile($params);
     self::cleanFile();
     self::createLibDir();
-    self::composerDumpAutoload();
 
     return TRUE;
   }
@@ -226,13 +225,6 @@ class SetupWizard {
     $fs->mkdir('config');
     $fs->mkdir('config/sync');
     $fs->touch('config/sync/.gitkeep');
-  }
-
-  /**
-   * Dump autoload after updating composer.json "autoload" values.
-   */
-  private static function composerDumpAutoload(): void {
-    exec('composer dump-autoload');
   }
 
   /**
