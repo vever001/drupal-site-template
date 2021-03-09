@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ agencies ]
+    branches: [ agencies, ag/* ]
   pull_request:
-    branches: [ agencies ]
+    branches: [ agencies, ag/* ]
 
 jobs:
   build:
