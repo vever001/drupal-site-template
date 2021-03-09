@@ -14,10 +14,14 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.3'
+          tools: composer:v1
 
       - name: Create a project
         run: |
-          docker run --rm -v $PWD:/var/www/html -w /var/www/html fpfis/httpd-php-dev:7.3 composer create-project --repository-url=packages.json --ansi --no-progress --no-interaction vever001/drupal-site-template digit-drupal-site-test-reference
+          composer create-project --repository-url=packages.json --ansi --no-progress --no-interaction vever001/drupal-site-template digit-drupal-site-test-reference
           cd digit-drupal-site-test-reference
           git init
 
@@ -32,13 +36,6 @@ jobs:
       - name: Install site
         run: |
           cd digit-drupal-site-test-reference
-          docker-compose exec -T --user fpfis web ./vendor/bin/run toolkit:install-clean
-
-      - name: Test config artifacts detection
-        run: |
-          cd digit-drupal-site-test-reference
-          docker-compose exec -T --user fpfis web ./vendor/bin/drush cex -y
-          docker-compose exec -T --user fpfis web sed -i 's/system: 0/system: "0"/' config/sync/core.extension.yml
           docker-compose exec -T --user fpfis web ./vendor/bin/run toolkit:install-clean
 
       - name: Test PHPCS, Behat and PHPUnit
