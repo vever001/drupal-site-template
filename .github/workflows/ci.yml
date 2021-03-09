@@ -17,7 +17,7 @@ jobs:
 
       - name: Create a project
         run: |
-          composer create-project --repository-url=packages.json --ansi --no-progress --no-interaction vever001/drupal-site-template digit-drupal-site-test-reference
+          docker run --rm -v $PWD:/var/www/html -w /var/www/html fpfis/httpd-php-dev:7.3 composer create-project --repository-url=packages.json --ansi --no-progress --no-interaction vever001/drupal-site-template digit-drupal-site-test-reference
           cd digit-drupal-site-test-reference
           git init
 
