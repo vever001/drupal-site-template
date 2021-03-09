@@ -4,10 +4,10 @@
 
 If using Docker (recommended):
  - [Docker Compose](https://docs.docker.com/compose/install/)
- - PHP 7.1 or greater (needed to run [GrumPHP](https://github.com/phpro/grumphp) Git hooks)
+ - PHP 7.3 or greater (needed to run [GrumPHP](https://github.com/phpro/grumphp) Git hooks)
 
 If using a local LAMP stack:
- - A local LAMP stack with PHP 7.1 or greater
+ - A local LAMP stack with PHP 7.3 or greater
  - [Composer](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx).
 
 ## Building your local
