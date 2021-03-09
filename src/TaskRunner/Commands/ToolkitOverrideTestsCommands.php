@@ -5,15 +5,12 @@ declare(strict_types = 1);
 namespace Drupal\project\TaskRunner\Commands;
 
 use Consolidation\AnnotatedCommand\CommandData;
-use Drupal\project\TaskRunner\Tasks\LoadTasks;
 use EcEuropa\Toolkit\TaskRunner\Commands\TestsCommands as ToolkitTestsCommands;
 
 /**
  * Class ToolkitOverrideTestCommands.
  */
 class ToolkitOverrideTestsCommands extends ToolkitTestsCommands {
-
-  use LoadTasks;
 
   /**
    * Extra tasks to run before toolkit:test-behat.
