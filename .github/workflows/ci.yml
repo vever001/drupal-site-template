@@ -34,11 +34,12 @@ jobs:
           cd digit-drupal-site-test-reference
           docker-compose exec -T --user fpfis web ./vendor/bin/run toolkit:install-clean
 
-      - name: Test project:config-status command
+      - name: Test config artifacts detection
         run: |
           cd digit-drupal-site-test-reference
           docker-compose exec -T --user fpfis web ./vendor/bin/drush cex -y
-          docker-compose exec -T --user fpfis web ./vendor/bin/drush project:config-status
+          docker-compose exec -T --user fpfis web sed -i 's/system: 0/system: "0"/' config/sync/core.extension.yml
+          docker-compose exec -T --user fpfis web ./vendor/bin/run toolkit:install-clean
 
       - name: Test PHPCS, Behat and PHPUnit
         run: |
