@@ -133,11 +133,6 @@ class SetupWizard {
     unlink('.gitignore');
     rename('.gitignore.dist', '.gitignore');
 
-    // Remove the CHANGELOG.md.
-    if (file_exists('CHANGELOG.md')) {
-      unlink('CHANGELOG.md');
-    }
-
     // Remove the CI files.
     unlink('packages.json');
 

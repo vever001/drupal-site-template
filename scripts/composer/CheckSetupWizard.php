@@ -53,7 +53,6 @@ class CheckSetupWizard {
 
     $filenames = [
       '.gitignore.dist',
-      'CHANGELOG.md',
       'packages.json',
       '.github/workflows/ci.yml',
       '.github',
